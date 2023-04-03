@@ -1,0 +1,191 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Stripe API by Ashley",
+    "description": "Stripe is an online payment processing and commerce solution for internet businesses. The Stripe API is designed for developers who want to integrate Stripe into their online stores or applications. Stripe is a REST or RESTful API. It uses a single object to track each step of a payment to see what happens next.",
+    "contact": {
+      "email": "ashleysally00@gmail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.0"
+  },
+  "externalDocs": {
+    "description": "Sample Documentation about Using the API",
+    "url": "https://github.com/ashleysally00/api_documentation_writing_sample/wiki"
+  },
+  "servers": [
+    {
+      "url": "https://virtserver.swaggerhub.com/ASHLEYSALLY00_1/Ashley/1.0.0",
+      "description": "This is the server of my API"
+    }
+  ],
+  "tags": [
+    {
+      "name": "admins",
+      "description": "Secured Admin-only calls"
+    },
+    {
+      "name": "developers",
+      "description": "Operations available to regular developers"
+    },
+    {
+      "name": "students",
+      "description": "This is for the students"
+    }
+  ],
+  "paths": {
+    "/inventory": {
+      "get": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "searches inventory",
+        "description": "By passing in the appropriate options, you can search for\navailable inventory in the system\n",
+        "operationId": "searchInventory",
+        "parameters": [
+          {
+            "name": "searchString",
+            "in": "query",
+            "description": "pass an optional search string for looking up inventory",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "description": "number of records to skip for pagination",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "minimum": 0,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "maximum number of records to return",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "maximum": 50,
+              "minimum": 0,
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "search results matching criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InventoryItem"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "bad input parameter"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "admins"
+        ],
+        "summary": "adds an inventory item",
+        "description": "Adds an item to the system",
+        "operationId": "addInventory",
+        "requestBody": {
+          "description": "Inventory item to add",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InventoryItem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "item created"
+          },
+          "400": {
+            "description": "invalid input, object invalid"
+          },
+          "409": {
+            "description": "an existing item already exists"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "InventoryItem": {
+        "required": [
+          "id",
+          "manufacturer",
+          "name",
+          "releaseDate"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          },
+          "name": {
+            "type": "string",
+            "example": "Widget Adapter"
+          },
+          "releaseDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2016-08-29T09:12:33.001Z"
+          },
+          "manufacturer": {
+            "$ref": "#/components/schemas/Manufacturer"
+          }
+        }
+      },
+      "Manufacturer": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "ACME Corporation"
+          },
+          "homePage": {
+            "type": "string",
+            "format": "url",
+            "example": "https://www.acme-corp.com"
+          },
+          "phone": {
+            "type": "string",
+            "example": "408-867-5309"
+          }
+        }
+      }
+    }
+  }
+}
